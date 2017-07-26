@@ -23,7 +23,6 @@ public class MyForm implements ActionListener, TextAppend {
     private JLabel srcLabel;
     private JTextPane textPanel;
     private JButton startBtn;
-    private JCheckBox checkBox;
     private JButton clearBtn;
     private JFileChooser chooser;
     private JFrame frame;
@@ -66,7 +65,6 @@ public class MyForm implements ActionListener, TextAppend {
     //开始升级
     private void startGo(Object o) {
         FileUtils fileUtils = new FileUtils(srcField.getText(), sourField.getText());
-        fileUtils.setFlag(checkBox.isSelected());
         fileUtils.start(this);
     }
 

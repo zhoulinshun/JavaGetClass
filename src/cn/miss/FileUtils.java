@@ -69,6 +69,8 @@ public class FileUtils {
 
     private void foreach(String s) {
         String filePath = null;
+        if(s.contains("test"))
+            return;
         try {
             String l = s.substring(0, s.indexOf("\\"));
             if (l.equals("webapp")) {
@@ -86,7 +88,7 @@ public class FileUtils {
             append.append(filePath);
         } catch (IOException e) {
             e.printStackTrace();
-            append.append(filePath);
+            append.append("文件权限错误:"+filePath);
         }
     }
 
@@ -107,14 +109,13 @@ public class FileUtils {
     private File getFile(String filePath) throws IOException {
         File file = new File(filePath);
         File parentFile = file.getParentFile();
-        System.out.println("Ss");
+
         //创建所有父级目录
         if (!parentFile.exists()) parentFile.mkdirs();
         //创建文件
         if (!file.exists()) file.createNewFile();
         return file;
     }
-
 
     public String getSrcPath() {
         return srcPath;
