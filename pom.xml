@@ -19,6 +19,7 @@
             <groupId>com.intellij</groupId>
             <artifactId>forms_rt</artifactId>
             <version>7.0.3</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -38,7 +39,7 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>javac2</goal>
+                            <goal>help</goal>
                         </goals>
                     </execution>
                 </executions>
