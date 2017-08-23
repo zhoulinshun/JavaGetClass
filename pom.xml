@@ -27,6 +27,16 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.hudson</groupId>
+            <artifactId>ganymed-ssh2</artifactId>
+            <version>build210-hudson-1</version>
+        </dependency>
     </dependencies>
 
 
