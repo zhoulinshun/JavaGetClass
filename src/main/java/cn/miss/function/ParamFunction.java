@@ -1,8 +1,8 @@
-package cn.miss;
+package cn.miss.function;
 
 /**
  * @Author MissNull
- * @Description:
+ * @Description:  多参数函数
  * @Date: Created in 2017/8/29.
  */
 

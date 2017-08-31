@@ -1,0 +1,18 @@
+{
+  "srcPath": "E:\\IDEAWorkSpace\\kfwx2",
+  "outPath": "",
+  "dataFormat": "yyyyMMdd-HH",
+  "autoExcShell": false,
+  "autoTranFile": false,
+  "autoSave": true,
+  "ftps": [
+    {
+      "shellPath": "",
+      "user": "",
+      "pwd": "",
+      "ip": "",
+      "port": 22,
+      "ftpOut": "/usr/test2/"
+    }
+  ]
+}

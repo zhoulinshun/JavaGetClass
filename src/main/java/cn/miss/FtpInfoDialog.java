@@ -1,75 +1,128 @@
 package cn.miss;
 
+import cn.miss.util.Utils;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class FtpInfoDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTextField ip;
+    private JTextField port;
     private JTextField user;
     private JTextField pwd;
-    private JTextField port;
     private JTextField ftpOut;
-    private ParamFunction<String, Integer> function;
+    private JTextField shellPath;
+    private JTextField timeout;
+    private Consumer<List<Map<String, String>>> function;
 
     public FtpInfoDialog() {
         pack();
+        setSize(500, 500);
+        setLocationRelativeTo(null);
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
             }
         });
-
         buttonCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onCancel();
             }
         });
-
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
 
-
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
     public static void main(String[] args) {
         FtpInfoDialog dialog = new FtpInfoDialog();
-
         dialog.setVisible(true);
         System.exit(0);
     }
 
     private void onOK() {
+        if (!fieldAdjust()) {
+            return;
+        }
+        Map<String, String> map = new HashMap<>();
         dispose();
-        function.accept(Integer.valueOf(port.getText()), ip.getText(), user.getText(), pwd.getText(), ftpOut.getText());
+        map.put("timeout", timeout.getText());
+        map.put("port", port.getText());
+        map.put("ip", ip.getText());
+        map.put("user", user.getText());
+        map.put("pwd", pwd.getText());
+        map.put("ftpOut", ftpOut.getText());
+        map.put("shellPath", shellPath.getText());
+        List<Map<String, String>> maps = new ArrayList<>();
+        maps.add(map);
+        function.accept(maps);
+    }
+
+    private boolean fieldAdjust() {
+        Field[] declaredFields = getClass().getDeclaredFields();
+        try {
+            for (Field declaredField : declaredFields) {
+                declaredField.setAccessible(true);
+                if (declaredField.getType().equals(JTextField.class)) {
+                    JTextField s = (JTextField) declaredField.get(this);
+                    if (Utils.isEmpty(s.getText())) {
+                        JOptionPane.showMessageDialog(this, declaredField.getName() + "不能为空", "提示", JOptionPane.WARNING_MESSAGE);
+                        return false;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        if (Utils.isEmpty(port.getText())) {
+//            return false;
+//        }
+//        if (Utils.isEmpty(ip.getText())) {
+//            return false;
+//        }
+//        if (Utils.isEmpty(user.getText())) {
+//            return false;
+//        }
+//        if (Utils.isEmpty(pwd.getText())) {
+//            return false;
+//        }
+//        if (Utils.isEmpty(ftpOut.getText())) {
+//            return false;
+//        }
+//        if (Utils.isEmpty(shellPath.getText())) {
+//            return false;
+//        }
+//        if (!Utils.isEmpty(timeout.getText())) {
+//
+//        }
+
+        return true;
     }
 
     private void onCancel() {
         dispose();
     }
 
-    public void setCallable(ParamFunction<String, Integer> function) {
-        this.function = function;
+    public void setCallable(Consumer<List<Map<String, String>>> successCallable) {
+        this.function = successCallable;
     }
 
     {
@@ -104,7 +157,7 @@ public class FtpInfoDialog extends JDialog {
         buttonCancel.setText("Cancel");
         panel2.add(buttonCancel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel3.setLayout(new GridLayoutManager(7, 2, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
         label1.setText("ip");
@@ -134,6 +187,16 @@ public class FtpInfoDialog extends JDialog {
         ftpOut = new JTextField();
         ftpOut.setText("");
         panel3.add(ftpOut, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label6 = new JLabel();
+        label6.setText("完成执行脚本");
+        panel3.add(label6, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        shellPath = new JTextField();
+        panel3.add(shellPath, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label7 = new JLabel();
+        label7.setText("超时");
+        panel3.add(label7, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        timeout = new JTextField();
+        panel3.add(timeout, new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
     }
 
     /**

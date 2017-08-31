@@ -24,5 +24,6 @@
     <orderEntry type="library" name="Maven: org.junit.platform:junit-platform-commons:1.0.0-RC3" level="project" />
     <orderEntry type="library" name="Maven: org.jvnet.hudson:ganymed-ssh2:build210-hudson-1" level="project" />
     <orderEntry type="library" name="Maven: com.jcraft:jsch:0.1.54" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.1" level="project" />
   </component>
 </module>
